@@ -1,0 +1,9 @@
+version: '3.8'
+services:
+  fraud_detector:
+    build: .
+    mem_limit: 2g
+    mem_reservation: 1g
+    volumes:
+      - ./input:/app/input
+      - ./output:/app/output

@@ -33,14 +33,14 @@ class ProcessingService:
     def process_single_file(self, file_path):
         try:
             logger.info('Processing file: %s', file_path)
-            input_df = pd.read_csv(file_path).drop(columns=['name_1', 'name_2', 'street', 'post_code'])
+            input_df = pd.read_csv(file_path)
 
             logger.info('Starting preprocessing')
             processed_df = run_preproc(self.train, input_df)
-            
+
             logger.info('Making prediction')
             submission = make_pred(processed_df, file_path)
-            
+
             logger.info('Prepraring submission file')
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             output_filename = f"predictions_{timestamp}_{os.path.basename(file_path)}"
@@ -60,6 +60,7 @@ class FileHandler(FileSystemEventHandler):
         if not event.is_directory and event.src_path.endswith(".csv"):
             logger.debug('New file detected: %s', event.src_path)
             self.service.process_single_file(event.src_path)
+
 
 if __name__ == "__main__":
     logger.info('Starting ML scoring service...')
